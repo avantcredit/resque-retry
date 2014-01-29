@@ -70,7 +70,8 @@ module Resque
       def get_retry_args(*args)
         # If we are a Resque status job, we need to remove the hash from the args
         is_resque_status_job = respond_to?(:create)
-        params = is_resque_status_job && args[0].kind_of?(String) ? args[1] : args
+        flattened_args = args.flatten
+        params = is_resque_status_job && flattened_args[0].kind_of?(String) ? flattened_args.last : args
         # The parameters from this method are going to get splatted; as such, we should enforce an array, otherwise a
         # splat on a hash converts it to an array of [key, value] which breaks multiple retries.
         if !params.kind_of?(Array)
